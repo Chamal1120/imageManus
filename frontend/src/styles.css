@@ -1,0 +1,8 @@
+@import url(https://fonts.bunny.net/css?family=source-sans-3:200,200i,300,300i,400,400i,600,600i,900,900i);
+@import "tailwindcss";
+
+@theme {
+  --font-souceSans: 'Source Sans 3', sans-serif;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
