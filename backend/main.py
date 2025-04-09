@@ -10,7 +10,7 @@ from PIL import Image
 
 app = FastAPI(
     title="ImageManus API",
-    description="API for manupulating various things on images.",
+    description="API for manipulating various things on images.",
     version="0.1.0"
 )
 

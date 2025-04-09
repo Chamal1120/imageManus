@@ -2,7 +2,7 @@ import ImageProcessView from "../components/ImageProcessView";
 
 export default function convert() {
   const propsData = {
-    manupulationProp: "convert to Webp",
+    manipulationProp: "convert to Webp",
     imgResProp: "webp",
     apiEndPointProp: "convert-to-webp",
   }

@@ -1,7 +1,7 @@
 [project]
 name = "ImageManus API"
 version = "0.1.0"
-description = "API for manupulating images"
+description = "API for manipulating images"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

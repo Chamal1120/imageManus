@@ -2,7 +2,7 @@
 
 # ImageManus
 
--- An Online Image Manupulation Tool --
+-- An Online Image Manipulation Tool --
 
 </div>
 
@@ -18,6 +18,6 @@
 
 1. FastAPI - Python Web framework
 2. UV - Python package manager
-3. Pillow - Image manupulation and handling library for Python
+3. Pillow - Image manipulation and handling library for Python
 4. OpenCV, cvzone - Python computer vision libraries
-5. Numpy - Multi-dementional array and matrices calculation library
+5. Numpy - Multi-dimentional array and matrices calculation library

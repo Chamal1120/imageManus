@@ -43,7 +43,7 @@ export default function ImageProcessView(props) {
   return (
     <>
       <div class="flex flex-col justify-center text-center">
-        <h2 class="text-2xl py-10">{propsData.manupulationProp}</h2>
+        <h2 class="text-2xl py-10">{propsData.manipulationProp}</h2>
         <form onSubmit={handleFileConvert}>
           <Show when={!imageSrc()}>
             <label class="cursor-pointer">
