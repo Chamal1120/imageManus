@@ -9,7 +9,7 @@ from fastapi.responses import StreamingResponse
 from PIL import Image
 
 app = FastAPI(
-    title="Image manupulation API",
+    title="ImageManus API",
     description="API for manupulating various things on images.",
     version="0.1.0"
 )
@@ -89,7 +89,7 @@ async def convert_to_webp(
 
 
 @app.post(
-    "/remove_bg/",
+    "/removebg/",
     summary="Removes the background",
     response_description="PNG image with background removed."
 )

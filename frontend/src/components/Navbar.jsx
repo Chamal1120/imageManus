@@ -13,7 +13,9 @@ export default function Navbar(props) {
   return (
     <>
       <nav class="fixed flex flex-row py-6 px-5 justify-between z-50 top-0 left-0 right-0 max-w-7xl mx-auto items-center">
-        <A href="/">ImageManus</A>
+        <A href="/">
+          <span class="text-2xl font-black">IM.</span>
+        </A>
         <ul class="flex flex-row gap-10 justify-end items-center">
           <For each={navItems()}>{(item) =>
             <li class=""><A href={item.path}>{item.name}</A></li>

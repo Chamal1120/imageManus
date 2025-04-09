@@ -1,1 +1,1 @@
-# Frontend
+# ImageManus Frontend
