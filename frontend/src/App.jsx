@@ -1,12 +1,12 @@
 import { Router, Route, } from "@solidjs/router";
 import { createSignal, onMount } from "solid-js";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Convert from "./pages/Convert";
 import RemoveBG from "./pages/RemoveBG";
-import Docs from "./pages/Docs";
+import Filters from "./pages/Filters";
 import Contact from "./pages/Contact";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 
 // Main component
 export default function App() {
@@ -51,7 +51,7 @@ export default function App() {
             <Route path="/" component={() => <Home theme={theme()}/>} />
             <Route path="/convert" component={Convert} />
             <Route path="/removebg" component={RemoveBG} />
-            <Route path="/docs" component={Docs} />
+            <Route path="/filters" component={Filters} />
             <Route path="/contact" component={Contact} />
           </Router>
         </div>

@@ -6,7 +6,7 @@ from env_config import Settings
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-from PIL import Image
+from PIL import Image, ImageEnhance, ImageOps
 
 
 app = FastAPI(
@@ -129,6 +129,9 @@ async def remove_bg(image: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error reading the image: {str(e)}")
 
+    # ** I used chatgpt to read and understand the libraries to use numpy,
+    # OpenCV and cvzone to remove the background of an image ***
+
     # Convert bytes to numpy array for OpenCV
     nparr = np.frombuffer(img_bytes, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
@@ -195,3 +198,78 @@ async def remove_bg(image: UploadFile = File(...)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing image: {str(e)}")
+
+app.post(
+    "/filter",
+    summary="Apply the requested filter",
+    response_description="Image with filter applied",
+)
+
+
+async def filter_image(
+    image: UploadFile = File(...),
+    format: str = Form(...),
+    filter: str = Form(...),
+):
+    # Read the uploaded image as bytes
+    try:
+        img_bytes = await image.read()
+        input_img = BytesIO(img_bytes)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error reading the image: {str(e)}")
+
+    # Validate format
+    allowed_formats = {"webp", "jpeg", "png", "bmp", "tiff"}
+    if format.lower() not in allowed_formats:
+        raise HTTPException(status_code=400, detail=f"Invalid format. Allowed: {', '.join(allowed_formats)}")
+
+    # Validate format
+    allowed_filters = {"grayscale", "saturated", "sepia", "red-tint"}
+    if filter.lower() not in allowed_filters:
+        raise HTTPException(status_code=400, detail=f"Invalid filter. Allowed: {', '.join(allowed_filters)}")
+
+    try:
+        # Convert to the given format
+        img = Image.open(input_img)
+
+        # Define a bytes variable for the ouput
+        output_img = BytesIO()
+
+        # Apply the requested filter
+
+        # ** I used chatgpt to read and understand how the ImageOps and
+        # ImageEnhance in pillow works to save time and effort on browsing
+        # the official documentation **
+
+        match filter:
+            case "grayscale":
+                filtered = ImageOps.grayscale(img)
+            case "saturated":
+                filtered = ImageEnhance.color(img).enhance(2.0)
+            case "sepia":
+                # Greyscale the iamge
+                filtered = ImageOps.grayscale(img).convert("RGB")
+                # Change the grayscaled R, G, B values to mimic sepia
+                # (Utilizes the same concept learned in cs50 filter problem)
+                sepia_data = [
+                    (int(r * 240 / 255), int(r * 200 / 255), int(r * 145 / 255))
+                    for (r, g, b) in filtered.getdata()
+                ]
+                filtered.putdata(sepia_data)
+
+        # Save the image to the bytes variable
+        filtered.save(output_img, format=format.upper())
+
+        # Reset the pointer to start
+        output_img.seek(0)
+
+        # Return the converted file
+        headers = {
+            "X-Filename": f"{image.filename.split('.')[0]}_filtered.{format.lower()}",
+            "Content-Type": f"image/{format.upper()}"
+        }
+
+        return StreamingResponse(output_img, media_type=f"image/{format.lower()}", headers=headers)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Processing error: {str(e)}")

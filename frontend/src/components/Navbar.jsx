@@ -16,7 +16,7 @@ export default function Navbar(props) {
     { name: "Home", path: "/" },
     { name: "Convert", path: "/convert" },
     { name: "RemoveBG", path: "/removebg" },
-    { name: "Docs", path: "/docs" },
+    { name: "Filters", path: "/filters" },
     { name: "Contact", path: "/contact" },
   ]);
 
