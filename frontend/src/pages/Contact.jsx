@@ -1,3 +1,4 @@
+// Contact page view
 export default function Contact() {
   return (
   <div class="flex flex-col justify-center items-center gap-4">

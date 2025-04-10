@@ -1,13 +1,18 @@
 import ImageProcessView from "../components/ImageProcessView";
 
+// Convert page view (Utilize the resusable ImageProcessView component)
 export default function convert() {
+
+  // Define the props
   const propsData = {
-    manipulationProp: "Convert to Webp",
-    imgResProp: "webp",
-    apiEndPointProp: "convert-to-webp",
+    manipulationProp: "Convert any image to any type",
+    apiEndPointProp: "convert",
+    actionProp: "convert",
+    actionButtonNameProp: "Convert Image to"
   }
   return (
   <>
+    {/* Pass the props to the component */}
     <ImageProcessView propsData={propsData}/>
   </>
   );

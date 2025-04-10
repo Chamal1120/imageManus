@@ -1,5 +1,5 @@
 [project]
-name = "ImageManus API"
+name = "ImageManus-API"
 version = "0.1.0"
 description = "API for manipulating images"
 readme = "README.md"

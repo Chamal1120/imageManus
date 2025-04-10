@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from PIL import Image
 
+
 app = FastAPI(
     title="ImageManus API",
     description="API for manipulating various things on images.",
@@ -24,35 +25,36 @@ origins = [
 # Allow cross-origin requests
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,      # Allows requests from origins
-    allow_credentials=True,     # Allow cookies or other credentials to be sent
-    allow_methods=["*"],        # Allow all HTTP methods
-    allow_headers=["*"],        # Allow all headers
+    allow_origins=origins,          # Allows requests from origins
+    allow_credentials=True,         # Allow cookies or other credentials to be sent
+    allow_methods=["*"],            # Allow all HTTP methods
+    allow_headers=["*"],            # Allow all headers
+    expose_headers=["X-Filename"],  # Expose the custom header
 )
 
 
 @app.post(
-    "/convert-to-webp/",
-    summary="Convert image to WebP format",
-    response_description="WebP image with specified quality"
+    "/convert",
+    summary="Convert image to defined format",
+    response_description="image with specified quality"
 )
-async def convert_to_webp(
+async def convert(
     image: UploadFile = File(...),
-    quality: Optional[int] = Form(80)  # Default quality is 80
+    quality: Optional[int] = Form(80),  # Default quality is 80
+    format: str = Form(...),
 ):
     """
-    Convert an uploaded image to WebP format with the specified quality.
+    Convert an uploaded image to request defined format with the specified quality.
 
     This endpoint accepts any image format (JPG, PNG, etc.) and converts it
-    to WebP format with the specified compression quality.
-    The conversion is done in-memory without writing to disk.
+    to the defined format in the request with the specified compression quality.
 
     Parameters:
     - **image**: The image file to convert
-    - **quality**: WebP compression quality (1-100)
+    - **quality**: Compression quality (1-100)
 
     Returns:
-    - A WebP image as a streaming response
+    - An image in the format defined in the request as a streaming response
 
     Raises:
     - 400: If quality parameter is outside the valid range (1-100)
@@ -63,33 +65,38 @@ async def convert_to_webp(
     if quality < 1 or quality > 100:
         raise HTTPException(status_code=400, detail="Quality must be between 1 and 100")
 
+    # Allowed formats
+    allowed_formats = {"webp", "jpeg", "png", "bmp", "tiff"}
+    if format.lower() not in allowed_formats:
+        raise HTTPException(status_code=400, detail=f"Invalid format. Allowed: {', '.join(allowed_formats)}")
+
     try:
         contents = await image.read()
         input_img = BytesIO(contents)
 
-        # Convert to WebP
+        # Convert to the given format
         img = Image.open(input_img)
 
         output_img = BytesIO()
-        img.save(output_img, "WEBP", quality=quality)
+        img.save(output_img, format.upper(), quality=quality)
 
         # Reset the pointer to start
         output_img.seek(0)
 
         # Return the converted file
         headers = {
-            "Content-Disposition": f"attachment; filename={image.filename.split('.')[0]}_converted.webp",
-            "Content-Type": "image/png"
+            "X-Filename": f"{image.filename.split('.')[0]}_converted.{format.lower()}",
+            "Content-Type": f"image/{format.upper()}"
         }
 
-        return StreamingResponse(output_img, media_type="image/webp", headers=headers)
+        return StreamingResponse(output_img, media_type=f"image/{format.lower()}", headers=headers)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Conversion error: {str(e)}")
 
 
 @app.post(
-    "/removebg/",
+    "/removebg",
     summary="Removes the background",
     response_description="PNG image with background removed."
 )
@@ -180,7 +187,7 @@ async def remove_bg(image: UploadFile = File(...)):
 
         # Return the image with proper headers
         headers = {
-            "Content-Disposition": f"attachment; filename={image.filename.split('.')[0]}_nobg.png",
+            "X-Filename": f"{image.filename.split('.')[0]}_nobg.png",
             "Content-Type": "image/png"
         }
 

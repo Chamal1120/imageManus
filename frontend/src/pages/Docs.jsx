@@ -1,3 +1,4 @@
+// Docs page view
 export default function Docs() {
   return (
   <>
