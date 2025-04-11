@@ -1,5 +1,6 @@
 import ImageProcessView from "../components/ImageProcessView";
 
+// Filters page view (Utilize the resusable ImageProcessView component)
 export default function Filters() {
   // Define the props
   const propsData = {

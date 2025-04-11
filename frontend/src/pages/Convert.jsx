@@ -5,7 +5,7 @@ export default function convert() {
 
   // Define the props
   const propsData = {
-    manipulationProp: "Convert any image to any type",
+    manipulationProp: "Convert any Image to any Type",
     apiEndPointProp: "convert",
     actionProp: "convert",
     actionButtonNameProp: "Convert Image to"

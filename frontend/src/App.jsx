@@ -45,7 +45,7 @@ export default function App() {
   return (
     <div class="">
       <div class="dark:bg-gray-900 dark:text-gray-200 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-5">
+        <div class="max-w-7xl mx-auto px-5 font-souceSans">
           {/* Wrap routes inside the layout with Solid.js Router components */}
           <Router root={Layout}>
             <Route path="/" component={() => <Home theme={theme()}/>} />

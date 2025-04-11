@@ -2,6 +2,7 @@ from io import BytesIO
 from typing import Optional
 import cv2
 import numpy as np
+import logging
 from env_config import Settings
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,6 +15,9 @@ app = FastAPI(
     description="API for manipulating various things on images.",
     version="0.1.0"
 )
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("imageManusAPI")
 
 settings = Settings()
 
@@ -106,7 +110,6 @@ async def remove_bg(image: UploadFile = File(...)):
 
     This endpoint applies automatic background removal using the GrabCut algorithm
     with an automatically generated rectangle (margin of 10% from each edge).
-    The process is done entirely in-memory.
 
     The algorithm works best on images where:
     - The subject is centered in the frame
@@ -199,16 +202,15 @@ async def remove_bg(image: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing image: {str(e)}")
 
-app.post(
+
+@app.post(
     "/filter",
     summary="Apply the requested filter",
     response_description="Image with filter applied",
 )
-
-
 async def filter_image(
     image: UploadFile = File(...),
-    format: str = Form(...),
+    format: str = Form("jpeg"),
     filter: str = Form(...),
 ):
     # Read the uploaded image as bytes
@@ -229,7 +231,6 @@ async def filter_image(
         raise HTTPException(status_code=400, detail=f"Invalid filter. Allowed: {', '.join(allowed_filters)}")
 
     try:
-        # Convert to the given format
         img = Image.open(input_img)
 
         # Define a bytes variable for the ouput
@@ -241,21 +242,27 @@ async def filter_image(
         # ImageEnhance in pillow works to save time and effort on browsing
         # the official documentation **
 
-        match filter:
-            case "grayscale":
-                filtered = ImageOps.grayscale(img)
-            case "saturated":
-                filtered = ImageEnhance.color(img).enhance(2.0)
-            case "sepia":
-                # Greyscale the iamge
-                filtered = ImageOps.grayscale(img).convert("RGB")
-                # Change the grayscaled R, G, B values to mimic sepia
-                # (Utilizes the same concept learned in cs50 filter problem)
-                sepia_data = [
-                    (int(r * 240 / 255), int(r * 200 / 255), int(r * 145 / 255))
-                    for (r, g, b) in filtered.getdata()
-                ]
-                filtered.putdata(sepia_data)
+        try:
+            match filter:
+                case "grayscale":
+                    filtered = ImageOps.grayscale(img)
+                    logger.info("grayscale filter applied")
+                case "saturated":
+                    filtered = ImageEnhance.Color(img).enhance(2.0)
+                    logger.info("saturated filter applied")
+                case "sepia":
+                    # Greyscale the iamge
+                    filtered = ImageOps.grayscale(img).convert("RGB")
+                    # Change the grayscaled R, G, B values to mimic sepia
+                    # (Utilizes the same concept learned in cs50 filter problem)
+                    sepia_data = [
+                        (int(r * 240 / 255), int(r * 200 / 255), int(r * 145 / 255))
+                        for (r, g, b) in filtered.getdata()
+                    ]
+                    filtered.putdata(sepia_data)
+                    logger.info("sepia filter applied")
+        except Exception as e:
+            logger.info(f"Filter application failed: {str(e)}")
 
         # Save the image to the bytes variable
         filtered.save(output_img, format=format.upper())
@@ -272,4 +279,5 @@ async def filter_image(
         return StreamingResponse(output_img, media_type=f"image/{format.lower()}", headers=headers)
 
     except Exception as e:
+        logger.info(f"Error occurred: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Processing error: {str(e)}")
