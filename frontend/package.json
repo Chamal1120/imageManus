@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "prettier:check": "prettier --check .",
-    "prettier:write": "prettier --write .",
+    "prettier:write": "prettier --write ."
   },
   "dependencies": {
     "@solidjs/router": "^0.15.3",
