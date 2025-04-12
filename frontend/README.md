@@ -1,1 +1,0 @@
-# ImageManus Frontend

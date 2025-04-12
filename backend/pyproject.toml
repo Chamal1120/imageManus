@@ -5,7 +5,6 @@ description = "API for manipulating images"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "cvzone>=1.6.1",
     "fastapi[standard]>=0.115.12",
     "mediapipe>=0.10.14",
     "numpy>=2.2.4",

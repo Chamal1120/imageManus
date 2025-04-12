@@ -1,8 +1,11 @@
+/* Import Source Sans font from Bunny fonts CDN */
 @import url(https://fonts.bunny.net/css?family=source-sans-3:200,200i,300,300i,400,400i,600,600i,900,900i);
-@import "tailwindcss";
+@import 'tailwindcss';
 
+/* Add Source Sans font to tailwind */
 @theme {
   --font-souceSans: 'Source Sans 3', sans-serif;
 }
 
+/* Add a custom dark toggle class to tailwind */
 @custom-variant dark (&:where(.dark, .dark *));

@@ -133,7 +133,7 @@ async def remove_bg(image: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail=f"Error reading the image: {str(e)}")
 
     # ** I used chatgpt to read and understand the libraries to use numpy,
-    # OpenCV and cvzone to remove the background of an image ***
+    # OpenCV to remove the background of an image ***
 
     # Convert bytes to numpy array for OpenCV
     nparr = np.frombuffer(img_bytes, np.uint8)
@@ -226,7 +226,7 @@ async def filter_image(
         raise HTTPException(status_code=400, detail=f"Invalid format. Allowed: {', '.join(allowed_formats)}")
 
     # Validate format
-    allowed_filters = {"grayscale", "saturated", "sepia", "red-tint"}
+    allowed_filters = {"grayscale", "saturated", "sepia"}
     if filter.lower() not in allowed_filters:
         raise HTTPException(status_code=400, detail=f"Invalid filter. Allowed: {', '.join(allowed_filters)}")
 
