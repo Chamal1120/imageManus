@@ -1,25 +1,14 @@
 <div align="center">
 
+<img src="./readme-assets/LOGO.svg" width="200px"></img>
+
 # ImageManus
--- An Online Image Manipulation Tool --
+-- An Online Image Manipulation Toolbox --
 
 </div>
 
-## Tech Stack
-
-#### Frontend
-1. **Solid.js** - A reactive JavaScript framework
-2. **TailwindCSS** - A utility based CSS framework
-3. **Node.js** - JavaScript runtime environment
-
-#### Backend
-1. **FastAPI** - Python Web framework
-2. **UV** - Python package manager
-3. **Pillow** - Image manipulation and handling library for Python
-4. **OpenCV** - Computer vision library for Python
-5. **Numpy** - Multi-dimentional array and matrices calculation library for Python
-
 ## Video Demo
+[![ImageManus Demo](https://img.youtube.com/vi/ZuT7S3BEMNg/0.jpg)](https://www.youtube.com/watch?v=ZuT7S3BEMNg)
 
 ## Screenshots
 <div align="center">
@@ -32,6 +21,25 @@
     <img src="/readme-assets/image-manus-screenshot-4.webp" width="112px"></img>
 </div>
 
+## Description
+ImageManus is a image manipulation toolbox as a web application that offers users to convert image file types, remove backgrounds and apply filters just using their browsers. This provides beautiful, fast and intuitive UI for both desktop and mobile devices so anyone can access this using their preferred device.
+
+## Tech Stack
+
+#### Frontend
+1. **Solid.js** - A reactive JavaScript framework
+2. **TailwindCSS** - A utility based CSS framework
+3. **Prettier** - A code formatter
+3. **Node.js** - JavaScript runtime environment
+
+#### Backend
+1. **FastAPI** - Python Web framework
+2. **UV** - Python package manager
+3. **Pillow** - Image manipulation and handling library for Python
+4. **OpenCV** - Computer vision library for Python
+5. **Numpy** - Multi-dimentional array and matrices calculation library for Python
+
+
 ## High level Architecture
 
 ![Image Manus architecuture](/readme-assets/image-manus-architecture.svg)
@@ -39,7 +47,7 @@
 #### >> Flow
 1. User uploads an image to the frontend through an input grabber (an html input element).
 2. Depends on the page user is on, frontend will present the available actions.
-3. User select the action and press on process button.
+3. User select an action and press on process button.
 4. Frontend collects the infomration and then sends a request with the image and the action needed to be performed for that image.
 5. Backend recieves the request, processes the image based on action and sends back a response to the backend.
 6. Frontend recieves the reponse, extracts the image from it and prepare a download button for the user to download the image.
@@ -83,7 +91,7 @@ This sub section will explain the image processsing techniques happenining on ea
         3. Sepia: Applies sepia effect by first transforming into grayscale, and then those pixels into warm sepia tones.
     2. Filtered image is saved in the specified format using Pillow.
 
-![NOTE]
+> [!NOTE]
 > All routes will recieve the image as a bytestream and sends the reponse as a bytestream.
 
 ## Frontend
@@ -113,4 +121,4 @@ This section will explain how frontend is working as a solid.js web application.
 
 ## Links and References
 
-1. OpenCV's Grabcut alogorithm - [https://docs.opencv.org/3.4/d8/d83/tutorial_py_grabcut.html](https://docs.opencv.org/3.4/d8/d83/tutorial_py_grabcut.html)
+1. OpenCV's Grabcut algorithm - [https://docs.opencv.org/3.4/d8/d83/tutorial_py_grabcut.html](https://docs.opencv.org/3.4/d8/d83/tutorial_py_grabcut.html)

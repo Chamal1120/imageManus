@@ -7,7 +7,7 @@ export default function convert() {
     manipulationProp: 'Convert any Image to any Type',
     apiEndPointProp: 'convert',
     actionProp: 'convert',
-    actionButtonNameProp: 'Convert Image to',
+    actionButtonNameProp: 'Convert the Image',
   }
   return (
     <>

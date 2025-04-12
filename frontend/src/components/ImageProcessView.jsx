@@ -160,7 +160,7 @@ export default function ImageProcessView(props) {
           {/* Show select an image button when no image is loaded */}
           <Show when={!imageSrc()}>
             <label
-              class="me-2 inline-flex cursor-pointer items-center rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 transition-all hover:bg-gray-100 hover:text-gray-700 focus:z-10 focus:text-gray-700 focus:ring-2 focus:ring-gray-700 active:scale-95 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              class="me-2 inline-flex cursor-pointer items-center rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 transition-all hover:bg-gray-100 hover:text-gray-700 focus:z-10 focus:text-gray-700 focus:ring-2 focus:ring-gray-700 active:scale-95 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-white"
               for="input-image"
             >
               Select an Image File
@@ -185,21 +185,15 @@ export default function ImageProcessView(props) {
                 alt="user uploaded Image"
               />
             </div>
-            {/* Show a conversion button not processed yet */}
-            <Show when={!imageRes()}>
-              {/* Show a loading spinner while processing the request */}
-              {isLoading() ? (
-                <LoadingButton passedProps={'processing...'} />
-              ) : (
-                <StaticButton passedProps={propsData.actionButtonNameProp} />
-              )}
 
-              {/* Show the coversion selection dropdown 
-              if parent component passes actionProp as convert */}
-              <Show when={propsData.actionProp === 'convert'}>
+            {/* Show the coversion selection dropdown 
+            if parent component passes actionProp as convert or filter */}
+            <div class="flex flex-row justify-center">
+              <Show when={propsData.actionProp === 'convert' && !imageRes()}>
                 <select
                   name="format"
                   id="format"
+                  class="inline-flex cursor-pointer items-center rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 transition-all hover:bg-gray-100 hover:text-gray-700 focus:z-10 focus:text-gray-700 focus:ring-2 focus:ring-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-white"
                   onInput={(e) => setSelectedFormat(e.currentTarget.value)}
                 >
                   <For each={convertFormats}>
@@ -207,10 +201,11 @@ export default function ImageProcessView(props) {
                   </For>
                 </select>
               </Show>
-              <Show when={propsData.actionProp === 'filter'}>
+              <Show when={propsData.actionProp === 'filter' && !imageRes()}>
                 <select
                   name="filter"
                   id="filter"
+                  class="inline-flex cursor-pointer items-center rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 transition-all hover:bg-gray-100 hover:text-gray-700 focus:z-10 focus:text-gray-700 focus:ring-2 focus:ring-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-white"
                   onInput={(e) => setSelectedFilter(e.currentTarget.value)}
                 >
                   <For each={filters}>
@@ -218,14 +213,28 @@ export default function ImageProcessView(props) {
                   </For>
                 </select>
               </Show>
-            </Show>
+
+              {/* Show a conversion button not processed yet */}
+              <Show when={!imageRes()}>
+                {/* Show a loading spinner while processing the request */}
+                {isLoading() ? (
+                  <LoadingButton passedProps={'processing...'} />
+                ) : (
+                  <div class="pl-2">
+                    <StaticButton
+                      passedProps={propsData.actionButtonNameProp}
+                    />
+                  </div>
+                )}
+              </Show>
+            </div>
           </Show>
         </form>
         {/* Show the Download button when response image is ready */}
         <Show when={imageRes()}>
           <div>
             <button
-              class="me-2 inline-flex cursor-pointer items-center rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 transition-all hover:bg-gray-100 hover:text-gray-700 focus:z-10 focus:text-gray-700 focus:ring-2 focus:ring-gray-700 active:scale-95 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              class="me-2 inline-flex cursor-pointer items-center rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 transition-all hover:bg-gray-100 hover:text-gray-700 focus:z-10 focus:text-gray-700 focus:ring-2 focus:ring-gray-700 active:scale-95 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-white"
               onClick={() => {
                 const link = document.createElement('a')
                 link.href = imageResUrl()
@@ -237,7 +246,7 @@ export default function ImageProcessView(props) {
             </button>
             {/* Show a "Do another button" that reset the state variables to their initial states */}
             <button
-              class="me-2 inline-flex cursor-pointer items-center rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 transition-all hover:bg-gray-100 hover:text-gray-700 focus:z-10 focus:text-gray-700 focus:ring-2 focus:ring-gray-700 active:scale-95 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+              class="me-2 inline-flex cursor-pointer items-center rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 transition-all hover:bg-gray-100 hover:text-gray-700 focus:z-10 focus:text-gray-700 focus:ring-2 focus:ring-gray-700 active:scale-95 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-white"
               onClick={() => {
                 URL.revokeObjectURL(imageResUrl())
                 setImageSrc()

@@ -210,20 +210,33 @@ async def remove_bg(image: UploadFile = File(...)):
 )
 async def filter_image(
     image: UploadFile = File(...),
-    format: str = Form("jpeg"),
     filter: str = Form(...),
 ):
+    """
+    Applies filters to the requested images.
+
+    This endpoint applies filters as requested to the requested images using pillow's
+    image manipulation capabilites.
+
+    Parameters:
+    - **image**: The input image file
+    - **format**: Format for the output image (optional)
+    - **filter**: The filter needs to be applied
+
+    Returns:
+    - A PNG image with requested filter applied as a streaming response
+
+    Raises:
+    - 400: If an invalid filter.
+    - 500: If there's an error during image processing or reading
+    """
+
     # Read the uploaded image as bytes
     try:
         img_bytes = await image.read()
         input_img = BytesIO(img_bytes)
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error reading the image: {str(e)}")
-
-    # Validate format
-    allowed_formats = {"webp", "jpeg", "png", "bmp", "tiff"}
-    if format.lower() not in allowed_formats:
-        raise HTTPException(status_code=400, detail=f"Invalid format. Allowed: {', '.join(allowed_formats)}")
 
     # Validate format
     allowed_filters = {"grayscale", "saturated", "sepia"}
@@ -265,18 +278,18 @@ async def filter_image(
             logger.info(f"Filter application failed: {str(e)}")
 
         # Save the image to the bytes variable
-        filtered.save(output_img, format=format.upper())
+        filtered.save(output_img, "JPEG")
 
         # Reset the pointer to start
         output_img.seek(0)
 
         # Return the converted file
         headers = {
-            "X-Filename": f"{image.filename.split('.')[0]}_filtered.{format.lower()}",
-            "Content-Type": f"image/{format.upper()}"
+            "X-Filename": f"{image.filename.split('.')[0]}_filtered.jpeg",
+            "Content-Type": f"image/JPEG"
         }
 
-        return StreamingResponse(output_img, media_type=f"image/{format.lower()}", headers=headers)
+        return StreamingResponse(output_img, media_type=f"image/jpeg", headers=headers)
 
     except Exception as e:
         logger.info(f"Error occurred: {str(e)}")
